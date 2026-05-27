@@ -31,8 +31,6 @@ terragrunt run --all plan
 terragrunt run --all destroy
 ```
 
-See [TERRAGRUNT_V1_GUIDE.md](TERRAGRUNT_V1_GUIDE.md) for more details.
-
 ## Quick Start (TL;DR)
 
 **Deploy everything with Terragrunt v1.0+:**
@@ -55,7 +53,6 @@ terragrunt refresh && terragrunt output application_url
 curl $(terragrunt output -raw application_url)
 ```
 
-**That's it!** ✅ No manual IAM setup, no kubectl configuration needed.
 
 **Time:** ~25-30 minutes for full deployment.
 
@@ -112,14 +109,6 @@ cd environments/dev
 terragrunt run --all apply
 ```
 
-**That's it!** ✅ 
-
-The deployment is **fully automated**:
-- ✅ EKS cluster automatically grants admin permissions to the creator (no manual IAM setup needed)
-- ✅ App module automatically configures kubectl via Kubernetes provider (no `aws eks update-kubeconfig` needed)
-- ✅ ALB Controller is deployed automatically via Helm
-- ✅ Application is deployed and ALB URL is displayed in outputs
-
 **Time:** ~25-30 minutes
 
 **After deployment completes:**
@@ -165,12 +154,10 @@ terragrunt apply
 # 3. EKS (Kubernetes cluster with auto admin permissions)
 cd ../eks
 terragrunt apply
-# ✅ No manual IAM setup needed - cluster creator gets admin automatically!
 
 # 4. App (Deploy application with auto kubectl config)
 cd ../app
 terragrunt apply
-# ✅ No 'aws eks update-kubeconfig' needed - Kubernetes provider handles it!
 
 # 5. Get the application URL
 terragrunt output application_url
@@ -180,7 +167,6 @@ sleep 120  # Wait 2 minutes for ALB
 terragrunt refresh && terragrunt output application_url
 ```
 
-**That's it!** No manual steps required.
 
 **Optional - Configure kubectl for manual use:**
 
@@ -191,35 +177,11 @@ kubectl get pods
 kubectl get ingress
 ```
 
-#### Automated Script
-```bash
-# Use the provided script
-chmod +x terragrunt-deploy.sh
-./terragrunt-deploy.sh dev
-```
-
-**Time:** ~25-30 minutes
-
-**Benefits:**
-- ✅ **Fully automated deployment** - No manual IAM or kubectl configuration needed
-- ✅ **DRY configuration** - No repeated backend/provider code
-- ✅ **Automatic dependency management** - Correct deployment order guaranteed
-- ✅ **Easy multi-environment setup** - Copy `dev` to `staging` or `prod`
-- ✅ **Centralized variable management** - All config in `env.hcl`
-- ✅ **Infrastructure as Code** - Everything versioned and reproducible
-
 **Key Features:**
 - 🔐 **Auto IAM permissions**: `enable_cluster_creator_admin_permissions = true` in EKS module
 - 🔧 **Auto kubectl config**: Kubernetes provider in app module handles authentication
 - 📦 **State management**: S3 backend with DynamoDB locking
 - 🔄 **Dependency graph**: Terragrunt ensures correct deployment order
-
-**Documentation:**
-- 📖 **[HUONG_DAN_TERRAGRUNT.md](HUONG_DAN_TERRAGRUNT.md)** - Detailed guide in Vietnamese
-- 📖 **[QUICK_START_TERRAGRUNT.md](QUICK_START_TERRAGRUNT.md)** - Quick reference
-- 📖 **[README_TERRAGRUNT.md](README_TERRAGRUNT.md)** - Overview and getting started
-- 📖 **[GIAI_THICH_KUBECTL_CONFIG.md](GIAI_THICH_KUBECTL_CONFIG.md)** - Why kubectl auto-configuration works
-- 📖 **[CAU_TRUC_PROJECT.md](CAU_TRUC_PROJECT.md)** - Project structure explained
 
 ---
 
@@ -275,7 +237,7 @@ terragrunt run --all apply
          ↓
     App (Kubernetes resources via provider)
          ↓
-    ✅ Done! Application URL in outputs
+    Done! Application URL in outputs
 ```
 
 **No manual intervention needed at any step!**
@@ -290,27 +252,7 @@ terragrunt run --all apply
 
 ### Option 2: Terraform (Traditional)
 
-#### Quick Start (Automated)
-
-For a fully automated deployment, use the provided script:
-
-```bash
-./deploy-all.sh
-```
-
-This script will:
-1. Deploy Bootstrap (S3 + DynamoDB)
-2. Deploy VPC
-3. Deploy EKS cluster
-4. Grant IAM access automatically
-5. Deploy ALB Controller
-6. Deploy sample application
-
-**Time:** ~25-30 minutes
-
 #### Manual Deployment (Step-by-Step)
-
-If you prefer to deploy manually or understand each step:
 
 #### 1. Bootstrap (Remote State Backend)
 
