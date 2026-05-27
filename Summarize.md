@@ -133,7 +133,7 @@ separately — it is not included by default.
   reads these rules and configures ALB listener rules accordingly.
   A single Ingress object can hold multiple routing rules.
 
-### Traffic flow
+### Traffic flow 
 
 **Inbound (user → app)**
 
@@ -142,6 +142,21 @@ Internet → IGW → ALB (matches listener rules) → Service (routes by label s
 **Outbound (pod → AWS API / ECR)**
 
 Pod (private subnet) → NAT Gateway (public subnet) → IGW → Internet
+
+---
+
+# Workflow when deploy apps
+**Step 1: Deployment**
+
+Kubectl apply -f <web-demo\> -> K8s API server receive manifest -> Deployment controller creates replicaSet -> ReplicaSet creates 2 pods -> Scheduler assign pods to Worker nodes -> Kubelet in each node call Containerd to pull image to pod -> Start container -> 2 pods running on private subnet.
+
+**Step 2: Service**
+
+Create service -> k8s assign clusterIP (virtual IP) to service -> Controller use selector to find pods match the label -> create endpoint object (with real IPs) -> Kube-proxy detect new service and creates iptables rules on each node
+
+**Step 3: Ingress**
+
+Ingress created with annotations -> AWS load balancer controller detect and read annotations -> Controller call AWS API to create base on annotations (ALB on public subnet, target group, listener and listener rules) -> Target group register 2 pod IPs directly -> ALB health check -> Ingress status updated with ALB hostname
 
 ---
 
