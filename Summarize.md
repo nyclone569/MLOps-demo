@@ -145,7 +145,7 @@ Pod (private subnet) → NAT Gateway (public subnet) → IGW → Internet
 
 ---
 
-# Workflow when deploy apps
+# Deploy workflow
 **Step 1: Deployment**
 
 Kubectl apply -f <web-demo\> -> K8s API server receive manifest -> Deployment controller creates replicaSet -> ReplicaSet creates 2 pods -> Scheduler assign pods to Worker nodes -> Kubelet in each node call Containerd to pull image to pod -> Start container -> 2 pods running on private subnet.
